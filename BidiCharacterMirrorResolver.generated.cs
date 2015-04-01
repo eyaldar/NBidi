@@ -18,7 +18,7 @@
 // ---
 //
 // Unicode Data Copyright:
-// Copyright © 1991-2006 Unicode, Inc. All rights reserved. Distributed under the Terms of Use in http://www.unicode.org/copyright.html.
+// Copyright Â© 1991-2006 Unicode, Inc. All rights reserved. Distributed under the Terms of Use in http://www.unicode.org/copyright.html.
 
 namespace NBidi
 {
@@ -197,6 +197,8 @@ namespace NBidi
 				case '\u27C6': return '\u27C5';
 				case '\u27C8': return '\u27C9';
 				case '\u27C9': return '\u27C8';
+				case '\u27CB': return '\u27CD';
+				case '\u27CD': return '\u27CB';
 				case '\u27D5': return '\u27D6';
 				case '\u27D6': return '\u27D5';
 				case '\u27DD': return '\u27DE';

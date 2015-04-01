@@ -36,7 +36,7 @@ namespace NBidi
 			sw.WriteLine("using System.Collections;");
 			sw.WriteLine("namespace NBidi {");
 			sw.WriteLine("\tpublic abstract class UnicodeArabicShapingResolver {");
-			sw.WriteLine("\t\tstatic Hashtable charForms = new Hashtable();");
+            sw.WriteLine("\t\tstatic Dictionary<int, char> charForms = new Dictionary<int, char>();");
 			sw.WriteLine("\t\tpublic static ArabicShapeJoiningType GetArabicShapeJoiningType(char c) {");
 			int start_val = -1;
 			int last_val = -1;

@@ -51,6 +51,14 @@ namespace NBidi
 		/// </example>
 		/// <remarks>Strong Type</remarks>
 		LRO,
+        /// <summary>
+        /// Left-to-Right Isolate
+        /// </summary>
+        /// <example>
+        /// LRI
+        /// </example>
+        /// <remarks>Strong Type</remarks>
+        LRI,
 		/// <summary>
 		/// Right-to-Left
 		/// </summary>
@@ -83,6 +91,22 @@ namespace NBidi
 		/// </example>
 		/// <remarks>Strong Type</remarks>
 		RLO,
+        /// <summary>
+        /// Right-to-Left Isolate
+        /// </summary>
+        /// <example>
+        /// RLI
+        /// </example>
+        /// <remarks>Strong Type</remarks>
+        RLI,
+        /// <summary>
+        /// First Strong Isolate
+        /// </summary>
+        /// <example>
+        /// FSI
+        /// </example>
+        /// <remarks>Strong Type</remarks>
+        FSI,
 		#endregion
 		#region Weak Types
 		/// <summary>
@@ -93,6 +117,14 @@ namespace NBidi
 		/// </example>
 		/// <remarks>Weak Type</remarks>
 		PDF,
+        /// <summary>
+        /// Pop Directional Isolate
+        /// </summary>
+        /// <example>
+        /// PDI
+        /// </example>
+        /// <remarks>Weak Type</remarks>
+        PDI,
 		/// <summary>
 		/// European Number
 		/// </summary>

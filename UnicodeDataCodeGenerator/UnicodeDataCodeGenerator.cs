@@ -100,7 +100,7 @@ namespace NBidi
         {
             ArrayList charData = new ArrayList();
 
-            ArrayList[] charTypes = new ArrayList[19];
+            ArrayList[] charTypes = new ArrayList[23];
             for (int i = 0; i < charTypes.Length; ++i)
                 charTypes[i] = new ArrayList();
 
@@ -165,11 +165,11 @@ namespace NBidi
 
             sw.WriteLine("\tpublic abstract class UnicodeCharacterDataResolver {");
             sw.WriteLine("\t\tstatic BidiCharacterType[] bidiCharType = new BidiCharacterType[0xffff];");
-            sw.WriteLine("\t\tstatic Hashtable categories = new Hashtable();");
-            sw.WriteLine("\t\tstatic Hashtable decomType = new Hashtable();");
-            sw.WriteLine("\t\tstatic Hashtable canonClass = new Hashtable();");
-            sw.WriteLine("\t\tstatic Hashtable decomMapping = new Hashtable();");
-            sw.WriteLine("\t\tstatic Hashtable composeMapping = new Hashtable();");
+            sw.WriteLine("\t\tstatic Dictionary<char, UnicodeGeneralCategory> categories = new Dictionary<char, UnicodeGeneralCategory>();");
+            sw.WriteLine("\t\tstatic Dictionary<char, UnicodeDecompositionType> decomType = new Dictionary<char, UnicodeDecompositionType>();");
+            sw.WriteLine("\t\tstatic Dictionary<char, UnicodeCanonicalClass> canonClass = new Dictionary<char, UnicodeCanonicalClass>();");
+            sw.WriteLine("\t\tstatic Dictionary<char, string> decomMapping = new Dictionary<char, string>();");
+            sw.WriteLine("\t\tstatic Dictionary<string, char> composeMapping = new Dictionary<string, char>();");
             sw.WriteLine();
 
             foreach (BidiCharacterType bct in Enum.GetValues(typeof(BidiCharacterType)))
@@ -207,7 +207,7 @@ namespace NBidi
             sw.WriteLine("\t\t/// <returns>The character general Unicode category.</returns>");
             sw.WriteLine("\t\tpublic static UnicodeGeneralCategory GetUnicodeGeneralCategory(char c) {");
             sw.WriteLine("\t\t\tif (categories.ContainsKey(c))");
-            sw.WriteLine("\t\t\t\treturn (UnicodeGeneralCategory) categories[c];");
+            sw.WriteLine("\t\t\t\treturn categories[c];");
             sw.WriteLine("\t\t\treturn UnicodeGeneralCategory.Cn;");
             sw.WriteLine("\t\t}");
             sw.WriteLine();
@@ -218,25 +218,25 @@ namespace NBidi
             sw.WriteLine("\t\t/// <returns>The character Unicode canonical class.</returns>");
             sw.WriteLine("\t\tpublic static UnicodeCanonicalClass GetUnicodeCanonicalClass(char c) {");
             sw.WriteLine("\t\t\tif (canonClass.ContainsKey(c))");
-            sw.WriteLine("\t\t\t\treturn (UnicodeCanonicalClass) canonClass[c];");
+            sw.WriteLine("\t\t\t\treturn canonClass[c];");
             sw.WriteLine("\t\t\treturn UnicodeCanonicalClass.NR;");
             sw.WriteLine("\t\t}");
             sw.WriteLine();
             sw.WriteLine("\t\tpublic static UnicodeDecompositionType GetUnicodeDecompositionType(char c) {");
             sw.WriteLine("\t\t\tif (decomType.ContainsKey(c))");
-            sw.WriteLine("\t\t\t\treturn (UnicodeDecompositionType)decomType[c];");
+            sw.WriteLine("\t\t\t\treturn decomType[c];");
             sw.WriteLine("\t\t\treturn UnicodeDecompositionType.None;");
             sw.WriteLine("\t\t}");
             sw.WriteLine();
             sw.WriteLine("\t\tpublic static string GetUnicodeDecompositionMapping(char c) {");
             sw.WriteLine("\t\t\tif (decomMapping.ContainsKey(c))");
-            sw.WriteLine("\t\t\t\treturn (string)decomMapping[c];");
+            sw.WriteLine("\t\t\t\treturn decomMapping[c];");
             sw.WriteLine("\t\t\treturn null;");
             sw.WriteLine("\t\t}");
             sw.WriteLine();
             sw.WriteLine("\t\tpublic static char Compose(string sequence) {");
             sw.WriteLine("\t\t\tif (composeMapping.ContainsKey(sequence))");
-            sw.WriteLine("\t\t\t\treturn (char)composeMapping[sequence];");
+            sw.WriteLine("\t\t\t\treturn composeMapping[sequence];");
             sw.WriteLine("\t\t\treturn '\\uFFFF';");
             sw.WriteLine("\t\t}");
             sw.WriteLine();

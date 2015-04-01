@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBidi-2008", "NBidi-2008.csproj", "{7E96C9A3-34EB-467E-B505-9FCBBD845949}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBidiTests-2008", "NBidiTests\NBidiTests-2008.csproj", "{7F3C7CFA-97A7-4A2C-A31A-E7F8C84570E6}"

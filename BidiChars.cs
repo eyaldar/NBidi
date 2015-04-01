@@ -32,38 +32,70 @@ namespace NBidi
 		#region Bidi Control Characters
 		/// <summary>
 		/// Right-to-Left Mark
+        /// Right-to-left zero-width non-Arabic character.
 		/// </summary>
 		public const char RLM = '\u200F';
 		
 		/// <summary>
 		/// Start of Right-to-Left Embedding
+        /// Treat the following text as embedded right-to-left.
 		/// </summary>
 		public const char RLE = '\u202B';
 		
 		/// <summary>
 		/// Start of Right-to-Left Override
+        /// Force following characters to be treated as strong right-to-left characters.
 		/// </summary>
 		public const char RLO = '\u202E';
+
+        /// <summary>
+        /// Start of Right-to-Left Isolate
+        /// Treat the following text as isolated and right-to-left.
+        /// </summary>
+        public const char RLI = '\u2067';
 	
 		/// <summary>
 		/// Left-to-Right Mark
+        /// Left-to-right zero-width character.
 		/// </summary>
 		public const char LRM = '\u200E';
 		
 		/// <summary>
 		/// Start of Left-to-Right Embedding
+        /// Treat the following text as embedded left-to-right.
 		/// </summary>
 		public const char LRE = '\u202A';
 		
 		/// <summary>
 		/// Start of Left-to-Right Override
+        /// Force following characters to be treated as strong left-to-right characters.
 		/// </summary>
 		public const char LRO = '\u202D';
-		
+
+        /// <summary>
+        /// Start of Left-to-Right Isolate
+        /// Treat the following text as isolated and left-to-right.
+        /// </summary>
+        public const char LRI = '\u2066';
+
 		/// <summary>
 		/// Pop Directional Formatting
+        /// End the scope of the last LRE, RLE, RLO, or LRO.
 		/// </summary>
 		public const char PDF = '\u202C';
+
+        /// <summary>
+        /// Pop Directional Isolate
+        /// End the scope of the last LRI, RLI, or FSI.
+        /// </summary>
+        public const char PDI = '\u2069';
+
+        /// <summary>
+        /// First Strong Isolate
+        /// Treat the following text as isolated and in the direction of its first strong directional character 
+        /// that is not inside a nested isolate.
+        /// </summary>
+        public const char FSI = '\u2068';
 		#endregion
 		
 		/// <summary>
