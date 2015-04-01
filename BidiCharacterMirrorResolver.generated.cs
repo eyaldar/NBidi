@@ -22,16 +22,17 @@
 
 namespace NBidi
 {
-    /// <summary>
-    /// An helper class that provides the mirrored alternatives for characters.
-    /// </summary>
+	/// <summary>
+	/// An helper class that provides the mirrored alternatives for characters.
+	/// </summary>
 	public abstract class BidiCharacterMirrorResolver {
-        /// <summary>
-        /// Returns the corresponding mirrored character for the given character, if any. If no mirroring available, returns the given character.
-        /// </summary>
-        /// <param name="c">A character to mirror.</param>
-        /// <returns>The mirrored character, or the given character if no mirroring available.</returns>
-		public static char GetBidiCharacterMirror(char c) {
+		/// <summary>
+		/// Returns the corresponding mirrored character for the given character, if any. If no mirroring available, returns the given character.
+		/// </summary>
+		/// <param name="c">A character to mirror.</param>
+		/// <returns>The mirrored character, or the given character if no mirroring available.</returns>
+		public static char GetBidiCharacterMirror(char c)
+		{
 			switch (c) {
 				case '\u0028': return '\u0029';
 				case '\u0029': return '\u0028';

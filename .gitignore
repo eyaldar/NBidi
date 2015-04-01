@@ -3,3 +3,6 @@
 *.exe
 *.manifest
 */bin/Debug/
+/obj/
+*/obj/Debug/
+*/bin/Debug/

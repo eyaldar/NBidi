@@ -22,10 +22,14 @@
 
 using System;
 using System.Collections;
-namespace NBidi {
-	public abstract class UnicodeArabicShapingResolver {
+using System.Collections.Generic;
+namespace NBidi
+{
+	public abstract class UnicodeArabicShapingResolver
+	{
 		static Dictionary<int, char> charForms = new Dictionary<int, char>();
-		public static ArabicShapeJoiningType GetArabicShapeJoiningType(char c) {
+		public static ArabicShapeJoiningType GetArabicShapeJoiningType(char c)
+		{
 			if (c >= '\u0600' && c <= '\u0605') return ArabicShapeJoiningType.U;
 			if (c == '\u0608') return ArabicShapeJoiningType.U;
 			if (c == '\u060B') return ArabicShapeJoiningType.U;
@@ -122,39 +126,6 @@ namespace NBidi {
 			if (c >= '\uA840' && c <= '\uA871') return ArabicShapeJoiningType.D;
 			if (c == '\uA872') return ArabicShapeJoiningType.L;
 			if (c == '\uA873') return ArabicShapeJoiningType.U;
-			if (c >= '\u10AC0' && c <= '\u10AC4') return ArabicShapeJoiningType.D;
-			if (c == '\u10AC5') return ArabicShapeJoiningType.R;
-			if (c == '\u10AC6') return ArabicShapeJoiningType.U;
-			if (c == '\u10AC7') return ArabicShapeJoiningType.R;
-			if (c == '\u10AC8') return ArabicShapeJoiningType.U;
-			if (c >= '\u10AC9' && c <= '\u10ACA') return ArabicShapeJoiningType.R;
-			if (c >= '\u10ACB' && c <= '\u10ACC') return ArabicShapeJoiningType.U;
-			if (c == '\u10ACD') return ArabicShapeJoiningType.L;
-			if (c >= '\u10ACE' && c <= '\u10AD2') return ArabicShapeJoiningType.R;
-			if (c >= '\u10AD3' && c <= '\u10AD6') return ArabicShapeJoiningType.D;
-			if (c == '\u10AD7') return ArabicShapeJoiningType.L;
-			if (c >= '\u10AD8' && c <= '\u10ADC') return ArabicShapeJoiningType.D;
-			if (c == '\u10ADD') return ArabicShapeJoiningType.R;
-			if (c >= '\u10ADE' && c <= '\u10AE0') return ArabicShapeJoiningType.D;
-			if (c == '\u10AE1') return ArabicShapeJoiningType.R;
-			if (c >= '\u10AE2' && c <= '\u10AE3') return ArabicShapeJoiningType.U;
-			if (c == '\u10AE4') return ArabicShapeJoiningType.R;
-			if (c >= '\u10AEB' && c <= '\u10AEE') return ArabicShapeJoiningType.D;
-			if (c == '\u10AEF') return ArabicShapeJoiningType.R;
-			if (c == '\u10B80') return ArabicShapeJoiningType.D;
-			if (c == '\u10B81') return ArabicShapeJoiningType.R;
-			if (c == '\u10B82') return ArabicShapeJoiningType.D;
-			if (c >= '\u10B83' && c <= '\u10B85') return ArabicShapeJoiningType.R;
-			if (c >= '\u10B86' && c <= '\u10B88') return ArabicShapeJoiningType.D;
-			if (c == '\u10B89') return ArabicShapeJoiningType.R;
-			if (c >= '\u10B8A' && c <= '\u10B8B') return ArabicShapeJoiningType.D;
-			if (c == '\u10B8C') return ArabicShapeJoiningType.R;
-			if (c == '\u10B8D') return ArabicShapeJoiningType.D;
-			if (c >= '\u10B8E' && c <= '\u10B8F') return ArabicShapeJoiningType.R;
-			if (c == '\u10B90') return ArabicShapeJoiningType.D;
-			if (c == '\u10B91') return ArabicShapeJoiningType.R;
-			if (c >= '\u10BA9' && c <= '\u10BAC') return ArabicShapeJoiningType.R;
-			if (c >= '\u10BAD' && c <= '\u10BAE') return ArabicShapeJoiningType.D;
 			UnicodeGeneralCategory ugc = UnicodeCharacterDataResolver.GetUnicodeGeneralCategory(c);
 			if (ugc == UnicodeGeneralCategory.Mn ||
 			    ugc == UnicodeGeneralCategory.Me ||

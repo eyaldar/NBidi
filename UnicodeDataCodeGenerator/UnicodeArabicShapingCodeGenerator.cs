@@ -34,10 +34,14 @@ namespace NBidi
             CodeGenerator.WriteLicenseTerms(sw);
 			sw.WriteLine("using System;");
 			sw.WriteLine("using System.Collections;");
-			sw.WriteLine("namespace NBidi {");
-			sw.WriteLine("\tpublic abstract class UnicodeArabicShapingResolver {");
+            sw.WriteLine("using System.Collections.Generic;");
+			sw.WriteLine("namespace NBidi");
+            sw.WriteLine("{");
+            sw.WriteLine("\tpublic abstract class UnicodeArabicShapingResolver"); 
+            sw.WriteLine("\t{");
             sw.WriteLine("\t\tstatic Dictionary<int, char> charForms = new Dictionary<int, char>();");
-			sw.WriteLine("\t\tpublic static ArabicShapeJoiningType GetArabicShapeJoiningType(char c) {");
+			sw.WriteLine("\t\tpublic static ArabicShapeJoiningType GetArabicShapeJoiningType(char c)");
+            sw.WriteLine("\t\t{");
 			int start_val = -1;
 			int last_val = -1;
 			string last_result = string.Empty;
@@ -59,12 +63,21 @@ namespace NBidi
 					{
 						if (start_val != -1)
 						{
-							if (last_val > start_val)
-								sw.WriteLine("\t\t\tif (c >= '\\u{0:X4}' && c <= '\\u{1:X4}') return ArabicShapeJoiningType.{2};",
-								             start_val, last_val, last_result.Trim());
-							else if (last_val == start_val)
-								sw.WriteLine("\t\t\tif (c == '\\u{0:X4}') return ArabicShapeJoiningType.{1};",
-								             last_val, last_result.Trim());
+                            if (last_val < 0xFFFF && start_val < 0xFFFF)
+                            {
+                                if (last_val > start_val)
+                                    sw.WriteLine("\t\t\tif (c >= '\\u{0:X4}' && c <= '\\u{1:X4}') return ArabicShapeJoiningType.{2};",
+                                                 start_val, last_val, last_result.Trim());
+                                else if (last_val == start_val)
+                                    sw.WriteLine("\t\t\tif (c == '\\u{0:X4}') return ArabicShapeJoiningType.{1};",
+                                                 last_val, last_result.Trim());
+                            }
+                            else
+                            {
+                                // For now we Ignore characters of more than 0xFFFF,
+                                // as it can't be represented easly as char in .Net anyway.
+                            }
+
 						}
 						start_val = char_val;
 					}

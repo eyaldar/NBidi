@@ -22,9 +22,12 @@
 
 using System;
 using System.Collections;
-namespace NBidi {
+using System.Collections.Generic;
+namespace NBidi
+{
 
-	public abstract class UnicodeCharacterDataResolver {
+	public abstract class UnicodeCharacterDataResolver
+	{
 		static BidiCharacterType[] bidiCharType = new BidiCharacterType[0xffff];
 		static Dictionary<char, UnicodeGeneralCategory> categories = new Dictionary<char, UnicodeGeneralCategory>();
 		static Dictionary<char, UnicodeDecompositionType> decomType = new Dictionary<char, UnicodeDecompositionType>();
@@ -440,7 +443,7 @@ namespace NBidi {
 		/// </summary>
 		/// <param name="c">A Unicode character for which to get the BiDi type.</param>
 		/// <returns>The character BiDi type.</returns>
-		public static BidiCharacterType GetBidiCharacterType(char c) 
+		public static BidiCharacterType GetBidiCharacterType(char c)
 		{
 			return bidiCharType[c];
 		}
@@ -450,8 +453,7 @@ namespace NBidi {
 		/// </summary>
 		/// <param name="c">A Unicode character for which to get the general Unicode category.</param>
 		/// <returns>The character general Unicode category.</returns>
-		public static UnicodeGeneralCategory GetUnicodeGeneralCategory(char c) 
-		{
+		public static UnicodeGeneralCategory GetUnicodeGeneralCategory(char c) {
 			if (categories.ContainsKey(c))
 				return categories[c];
 			return UnicodeGeneralCategory.Cn;
@@ -462,38 +464,37 @@ namespace NBidi {
 		/// </summary>
 		/// <param name="c">A Unicode character for which to get the Unicode canonical class.</param>
 		/// <returns>The character Unicode canonical class.</returns>
-		public static UnicodeCanonicalClass GetUnicodeCanonicalClass(char c) 
+		public static UnicodeCanonicalClass GetUnicodeCanonicalClass(char c)
 		{
 			if (canonClass.ContainsKey(c))
 				return canonClass[c];
 			return UnicodeCanonicalClass.NR;
 		}
 
-		public static UnicodeDecompositionType GetUnicodeDecompositionType(char c) 
+		public static UnicodeDecompositionType GetUnicodeDecompositionType(char c)
 		{
 			if (decomType.ContainsKey(c))
 				return decomType[c];
 			return UnicodeDecompositionType.None;
 		}
 
-		public static string GetUnicodeDecompositionMapping(char c) 
+		public static string GetUnicodeDecompositionMapping(char c)
 		{
 			if (decomMapping.ContainsKey(c))
 				return decomMapping[c];
 			return null;
 		}
 
-		public static char Compose(string sequence) 
+		public static char Compose(string sequence)
 		{
 			if (composeMapping.ContainsKey(sequence))
 				return composeMapping[sequence];
 			return '\uFFFF';
 		}
 
-		static UnicodeCharacterDataResolver () 
+		static UnicodeCharacterDataResolver ()
 		{
-			for (int i = 0; i < 0xffff; ++i) 
-			{
+			for (int i = 0; i < 0xffff; ++i) {
 				bidiCharType[i] = BidiCharacterType.L;
 			}
 			for (int i = 0; i < BctList_LRE.Length; i+=2)

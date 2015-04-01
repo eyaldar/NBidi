@@ -32,7 +32,8 @@ namespace NBidi
         public static void GenerateCode(StreamWriter sw)
         {
             CodeGenerator.WriteLicenseTerms(sw);
-            sw.WriteLine("namespace NBidi {");
+            sw.WriteLine("namespace NBidi");
+            sw.WriteLine("{");
             sw.WriteLine("\t/// <summary>");
             sw.WriteLine("\t/// An helper class that provides the mirrored alternatives for characters.");
             sw.WriteLine("\t/// </summary>");
@@ -42,7 +43,8 @@ namespace NBidi
             sw.WriteLine("\t\t/// </summary>");
             sw.WriteLine("\t\t/// <param name=\"c\">A character to mirror.</param>");
             sw.WriteLine("\t\t/// <returns>The mirrored character, or the given character if no mirroring available.</returns>");
-            sw.WriteLine("\t\tpublic static char GetBidiCharacterMirror(char c) {");
+            sw.WriteLine("\t\tpublic static char GetBidiCharacterMirror(char c)");
+            sw.WriteLine("\t\t{");
             sw.WriteLine("\t\t\tswitch (c) {");
 
             using (StreamReader sr = File.OpenText("BidiMirroring.txt"))
