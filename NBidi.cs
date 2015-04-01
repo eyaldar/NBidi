@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Text;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace NBidi
 {
@@ -47,7 +48,7 @@ namespace NBidi
         /// <returns>The visual representation of the string.</returns>
         public static string LogicalToVisual(string logicalString)
         {
-            Paragraph[] pars = SplitStringToParagraphs(logicalString);
+            List<Paragraph> pars = SplitStringToParagraphs(logicalString);
             StringBuilder sb = new StringBuilder();
             foreach (Paragraph p in pars)
                 sb.Append(p.BidiText);
@@ -62,7 +63,7 @@ namespace NBidi
         /// <param name="indexes">Implies where the original characters are.</param>
         /// <param name="lengths">Implies how many characters each original character occupies.</param>
         /// <returns>The visual representation of the string.</returns>
-        public static string LogicalToVisual(string logicalString, out int[] indexes, out int[] lengths)
+        public static string LogicalToVisual(string logicalString, out List<int> indexes, out List<int> lengths)
         {
             //Section 3:
             //1. seperate text into paragraphs
@@ -77,20 +78,18 @@ namespace NBidi
             //(4) resolving neutral types.
             //(5) resolving implicit embedding levels.
 
-            ArrayList arrIndexes = new ArrayList();
-            ArrayList arrLengths = new ArrayList();
+            indexes = new List<int>();
+            lengths = new List<int>();
 
-            Paragraph[] pars = SplitStringToParagraphs(logicalString);
+            List<Paragraph> pars = SplitStringToParagraphs(logicalString);
             StringBuilder sb = new StringBuilder();
             foreach (Paragraph p in pars)
             {
                 sb.Append(p.BidiText);
-                arrIndexes.AddRange(p.BidiIndexes);
-                arrLengths.AddRange(p.BidiIndexLengths);
+                indexes.AddRange(p.BidiIndexes);
+                lengths.AddRange(p.BidiIndexLengths);
             }
 
-            indexes = (int[])arrIndexes.ToArray(typeof(int));
-            lengths = (int[])arrLengths.ToArray(typeof(int));
             return sb.ToString();
         }
 
@@ -105,9 +104,9 @@ namespace NBidi
         // 3.3.1.P1 - Split the text into separate paragraphs.
         // A paragraph separator is kept with the previous paragraph.
         // Within each paragraph, apply all the other rules of this algorithm.
-        private static Paragraph[] SplitStringToParagraphs(string logicalString)
+        private static List<Paragraph> SplitStringToParagraphs(string logicalString)
         {
-            ArrayList ret = new ArrayList();
+            List<Paragraph> ret = new List<Paragraph>();
             int i;
             StringBuilder sb = new StringBuilder();
             for (i = 0; i < logicalString.Length; ++i)
@@ -128,7 +127,7 @@ namespace NBidi
             {
                 ret.Add(new Paragraph(sb.ToString()));
             }
-            return (Paragraph[])ret.ToArray(typeof(Paragraph));
+            return ret;
         }
 
         private class Paragraph
@@ -140,8 +139,8 @@ namespace NBidi
 
             byte embedding_level;
             CharData[] _text_data;
-            int[] _char_lengths;
-            int[] _bidi_indexes;
+            List<int> _char_lengths;
+            List<int> _bidi_indexes;
 
             bool _hasArabic;
             bool _hasNSMs;
@@ -185,12 +184,12 @@ namespace NBidi
                 }
             }
 
-            public int[] BidiIndexes
+            public List<int> BidiIndexes
             {
                 get { return _bidi_indexes; }
             }
 
-            public int[] BidiIndexLengths
+            public List<int> BidiIndexLengths
             {
                 get { return _char_lengths; }
             }
@@ -206,8 +205,8 @@ namespace NBidi
                 string controlChars = "\u200F\u202B\u202E\u200E\u202A\u202D\u202C";
 
                 StringBuilder sb = new StringBuilder(_bidi_text);
-                ArrayList idxArr = new ArrayList(_bidi_indexes);
-                ArrayList lenArr = new ArrayList(_char_lengths);
+                List<int> idxArr = new List<int>(_bidi_indexes);
+                List<int> lenArr = new List<int>(_char_lengths);
 
                 int i = 0;
                 while (i < sb.Length)
@@ -223,8 +222,8 @@ namespace NBidi
                 }
 
                 _bidi_text = sb.ToString();
-                _bidi_indexes = (int[])idxArr.ToArray(typeof(int));
-                _char_lengths = (int[])lenArr.ToArray(typeof(int));
+                _bidi_indexes = idxArr;
+                _char_lengths = lenArr;
             }
 
             // 3.3.1 The Paragraph Level
@@ -248,12 +247,12 @@ namespace NBidi
 
             public void NormalizeText()
             {
-                ArrayList char_lengths = new ArrayList();
+                List<int> char_lengths = new List<int>();
 
                 StringBuilder sb = InternalDecompose(char_lengths);
                 InternalCompose(sb, char_lengths);
 
-                _char_lengths = (int[])char_lengths.ToArray(typeof(int));
+                _char_lengths = char_lengths;
 
                 _text = sb.ToString();
             }
@@ -273,8 +272,8 @@ namespace NBidi
                 // X1
                 byte embeddingLevel = EmbeddingLevel;
                 DirectionalOverrideStatus dos = DirectionalOverrideStatus.Neutral;
-                Stack dosStack = new Stack();
-                Stack elStack = new Stack();
+                Stack<DirectionalOverrideStatus> dosStack = new Stack<DirectionalOverrideStatus>();
+                Stack<byte> elStack = new Stack<byte>();
                 int idx = 0;
                 for (int i = 0; i < _text.Length; ++i)
                 {
@@ -352,8 +351,8 @@ namespace NBidi
                         x9Char = true;
                         if (elStack.Count > 0)
                         {
-                            embeddingLevel = (byte)(elStack.Pop());
-                            dos = (DirectionalOverrideStatus)(dosStack.Pop());
+                            embeddingLevel = elStack.Pop();
+                            dos = dosStack.Pop();
                         }
                     }
                     #endregion
@@ -397,8 +396,8 @@ namespace NBidi
                 ReorderString();
                 FixMirroredCharacters();
 
-                ArrayList indexes = new ArrayList();
-                ArrayList lengths = new ArrayList();
+                List<int> indexes = new List<int>();
+                List<int> lengths = new List<int>();
 
                 StringBuilder sb = new StringBuilder();
                 foreach (CharData cd in _text_data)
@@ -409,7 +408,7 @@ namespace NBidi
                 }
 
                 _bidi_text = sb.ToString();
-                _bidi_indexes = (int[])indexes.ToArray(typeof(int));
+                _bidi_indexes = indexes;
             }
 
             /// <summary>
@@ -745,7 +744,7 @@ namespace NBidi
                 for (int curr_pos = 0; curr_pos < text.Length; ++curr_pos)
                 {
                     char ch = text[curr_pos];
-                    //string chStr = ((int)ch).ToString("X4");
+                    //string chStr = (ch).ToString("X4");
 
                     ArabicShapeJoiningType jt = UnicodeArabicShapingResolver.GetArabicShapeJoiningType(ch);
                     if ((jt == ArabicShapeJoiningType.R ||
@@ -788,12 +787,12 @@ namespace NBidi
 
                 StringBuilder sb = new StringBuilder();
 
-                ArrayList lenArr = new ArrayList(_char_lengths);
+                List<int> lenArr = new List<int>(_char_lengths);
 
                 for (int curr_pos = 0; curr_pos < text.Length; ++curr_pos)
                 {
                     char ch = text[curr_pos];
-                    //string chStr = ((int)ch).ToString("X4");
+                    //string chStr = (ch).ToString("X4");
                     ArabicShapeJoiningType jt = UnicodeArabicShapingResolver.GetArabicShapeJoiningType(ch);
 
                     if (last_char == BidiChars.ARABIC_LAM &&
@@ -826,7 +825,7 @@ namespace NBidi
                                 case BidiChars.ARABIC_ALEF_MADDA_ABOVE:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_MADDA_ABOVE_FINAL;
                                     lenArr.RemoveAt(insert_pos);
-                                    lenArr[insert_pos] = (int)(lenArr[insert_pos]) + 1;
+                                    lenArr[insert_pos] = lenArr[insert_pos] + 1;
                                     continue;
 
                                 case BidiChars.ARABIC_ALEF_HAMZA_ABOVE:
@@ -852,7 +851,7 @@ namespace NBidi
                                 case BidiChars.ARABIC_ALEF_MADDA_ABOVE:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_MADDA_ABOVE_ISOLATED;
                                     lenArr.RemoveAt(insert_pos);
-                                    lenArr[insert_pos] = (int)(lenArr[insert_pos]) + 1;
+                                    lenArr[insert_pos] = lenArr[insert_pos] + 1;
                                     continue;
 
                                 case BidiChars.ARABIC_ALEF_HAMZA_ABOVE:
@@ -871,7 +870,7 @@ namespace NBidi
                     sb.Append(UnicodeArabicShapingResolver.GetArabicCharacterByLetterForm(ch, letterForms[curr_pos]));
                 }
 
-                _char_lengths = (int[])lenArr.ToArray(typeof(int));
+                _char_lengths = lenArr;
 
                 return sb.ToString();
             }
@@ -882,7 +881,7 @@ namespace NBidi
                 return UnicodeCharacterDataResolver.Compose(first.ToString() + second.ToString());
             }
 
-            private void InternalCompose(StringBuilder target, ArrayList char_lengths)
+            private void InternalCompose(StringBuilder target, List<int> char_lengths)
             {
                 if (target.Length == 0) return;
                 int starterPos = 0;
@@ -890,7 +889,7 @@ namespace NBidi
                 int text_idx = 0;
                 char starterCh = target[0];
 
-                char_lengths[starterPos] = (int)char_lengths[starterPos] + 1;
+                char_lengths[starterPos] = char_lengths[starterPos] + 1;
 
                 UnicodeCanonicalClass lastClass = UnicodeCharacterDataResolver.GetUnicodeCanonicalClass(starterCh);
 
@@ -913,7 +912,7 @@ namespace NBidi
                         (lastClass < chClass || lastClass == UnicodeCanonicalClass.NR))
                     {
                         target[starterPos] = composite;
-                        char_lengths[starterPos] = (int)char_lengths[starterPos] + 1;
+                        char_lengths[starterPos] = char_lengths[starterPos] + 1;
                         // we know that we will only be replacing non-supplementaries by non-supplementaries
                         // so we don't have to adjust the decompPos
                         starterCh = composite;
@@ -928,19 +927,19 @@ namespace NBidi
                         }
                         lastClass = chClass;
                         target[compPos] = ch;
-                        //char_lengths[compPos] = (int)char_lengths[compPos] + 1;
+                        //char_lengths[compPos] = char_lengths[compPos] + 1;
                         int chkPos = compPos;
-                        if ((int)char_lengths[chkPos] < 0)
+                        if (char_lengths[chkPos] < 0)
                         {
-                            while ((int)char_lengths[chkPos] < 0)
+                            while (char_lengths[chkPos] < 0)
                             {
-                                char_lengths[chkPos] = (int)char_lengths[chkPos] + 1;
+                                char_lengths[chkPos] = char_lengths[chkPos] + 1;
                                 char_lengths.Insert(compPos, 0);
                                 chkPos++;
                             }
                         }
                         else
-                            char_lengths[chkPos] = (int)char_lengths[chkPos] + 1;
+                            char_lengths[chkPos] = char_lengths[chkPos] + 1;
 
                         if (target.Length != oldLen) // MAY HAVE TO ADJUST!
                         {
@@ -970,7 +969,7 @@ namespace NBidi
                 }
             }
 
-            private StringBuilder InternalDecompose(ArrayList char_lengths)
+            private StringBuilder InternalDecompose(List<int> char_lengths)
             {
                 StringBuilder target = new StringBuilder();
                 StringBuilder buffer = new StringBuilder();

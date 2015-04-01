@@ -6,3 +6,5 @@
 /obj/
 */obj/Debug/
 */bin/Debug/
+*bin/Debug/
+*bin/Debug/*

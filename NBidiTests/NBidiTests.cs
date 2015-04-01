@@ -25,6 +25,7 @@
 
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace NBidi
 {
@@ -200,7 +201,7 @@ namespace NBidi
         {
             string orig = "\u0647 \u200D\u0647 \u0647\u200D \u200D\u0647\u200D";
             string res = NBidi.LogicalToVisual(orig);
-            Assert.AreEqual("\uFEEC \uFEEB \uFEEA \uFEE9", res, "original: \"{0}\"\noriginal as chars: {1}\nresult as chars:   {2}", orig, AsCharArray(orig), AsCharArray(res));
+            Assert.AreEqual("\u200D\uFEEC \u200D\uFEEB \u200D\uFEEA \u200D\uFEE9", res, "original: \"{0}\"\noriginal as chars: {1}\nresult as chars:   {2}", orig, AsCharArray(orig), AsCharArray(res));
         }
 
         [Test]
@@ -255,8 +256,8 @@ namespace NBidi
         public void Test22_Indexes_1_NoComposition()
         {
             string orig = "Hello World \u05E9\u05DC\u05D5\u05DD \u05E2\u05D5\u05DC\u05DD";
-            int[] indexes;
-            int[] lengths;
+            List<int> indexes;
+            List<int> lengths;
             string res = NBidi.LogicalToVisual(orig, out indexes, out lengths);
             //HELLO WORLD slom olam
             //012345678901234567890
@@ -268,8 +269,8 @@ namespace NBidi
         public void Test23_Indexes_2_NoComposition_RLM()
         {
             string orig = BidiChars.RLM + "Hello World \u05E9\u05DC\u05D5\u05DD \u05E2\u05D5\u05DC\u05DD";
-            int[] indexes;
-            int[] lengths;
+            List<int> indexes;
+            List<int> lengths;
             string res = NBidi.LogicalToVisual(orig, out indexes, out lengths);
             // HELLO WORLD slom olam
             //0123456789012345678901
@@ -282,8 +283,8 @@ namespace NBidi
         {
             string orig = "Hello World \u0628\u0644\u0622 \u0644\u0627\u0653";
             //string exp = "Hello World \uFEF5 \uFEF6\uFE91";
-            int[] indexes;
-            int[] lengths;
+            List<int> indexes;
+            List<int> lengths;
             string res = NBidi.LogicalToVisual(orig, out indexes, out lengths);
             //HELLO WORLD abc def
             //0123456789012345678
@@ -305,8 +306,8 @@ namespace NBidi
             //string orig = "\u200F\uFE9F\uFE77\uFE82\uFEE7\uFE7B\uFEF0 \uFED7\uFE77\uFEEE\uFE7E\uFEE1\uFE78 \uFE8D\uFEDF\uFE7F\uFEE4\uFE77\uFEAA\uFE7A\uFEF3\uFE7F\uFEE8\uFE77\uFE94\uFE7A \uFEDB\uFE79\uFE92\uFE7F\uFEAE\uFE76\uFE81\uFEED\uFE78\uFEEB\uFE79\uFEE2\uFE7E \uFEED\uFE76 \uFEBF\uFE79\uFECC\uFE77\uFED4\uFE77\uFE82\uFEED\uFE78\uFEEB\uFE79\uFEE2\uFE7E The people of the city, the great and the small, came to me \u05D0\u05B5\u05DC\u05BC\u05B6\u05D4 \u05D4\u05B7\u05D3\u05BC\u05B0\u05D1\u05B8\u05E8\u05B4\u05D9\u05DD, \u05D0\u05B2\u05E9\u05C1\u05B6\u05E8 \u05D3\u05BC\u05B4\u05D1\u05BC\u05B6\u05E8 \u05DE\u05B9\u05E9\u05C1\u05B6\u05D4 \u05D0\u05B6\u05DC\u002D\u05DB\u05BC\u05B8\u05DC\u002D\u05D9\u05B4\u05E9\u05C2\u05B0\u05E8\u05B8\u05D0\u05B5\u05DC, \u05D1\u05BC\u05B0\u05E2\u05B5\u05D1\u05B6\u05E8, \u05D4\u05B7\u05D9\u05BC\u05B7\u05E8\u05B0\u05D3\u05BC\u05B5\u05DF";
             string orig = "\u200F\uFE9F\uFE77\uFE82\uFEE7\uFE7B\uFEF0";// \uFED7\uFE77\uFEEE\uFE7E\uFEE1\uFE78 \uFE8D\uFEDF\uFE7F\uFEE4\uFE77\uFEAA\uFE7A\uFEF3\uFE7F\uFEE8\uFE77\uFE94\uFE7A \uFEDB\uFE79\uFE92\uFE7F\uFEAE\uFE76\uFE81\uFEED\uFE78\uFEEB\uFE79\uFEE2\uFE7E \uFEED\uFE76 \uFEBF\uFE79\uFECC\uFE77\uFED4\uFE77\uFE82\uFEED\uFE78\uFEEB\uFE79\uFEE2\uFE7E The people of the city, the great and the small, came to me \u05D0\u05B5\u05DC\u05BC\u05B6\u05D4 \u05D4\u05B7\u05D3\u05BC\u05B0\u05D1\u05B8\u05E8\u05B4\u05D9\u05DD, \u05D0\u05B2\u05E9\u05C1\u05B6\u05E8 \u05D3\u05BC\u05B4\u05D1\u05BC\u05B6\u05E8 \u05DE\u05B9\u05E9\u05C1\u05B6\u05D4 \u05D0\u05B6\u05DC\u002D\u05DB\u05BC\u05B8\u05DC\u002D\u05D9\u05B4\u05E9\u05C2\u05B0\u05E8\u05B8\u05D0\u05B5\u05DC, \u05D1\u05BC\u05B0\u05E2\u05B5\u05D1\u05B6\u05E8, \u05D4\u05B7\u05D9\u05BC\u05B7\u05E8\u05B0\u05D3\u05BC\u05B5\u05DF";
             //string orig = "\u200F\u062C\u0640\u064E\u0627\u0653\u0646\u0640\u0650\u0649";// \uFED7\uFE77\uFEEE\uFE7E\uFEE1\uFE78 \uFE8D\uFEDF\uFE7F\uFEE4\uFE77\uFEAA\uFE7A\uFEF3\uFE7F\uFEE8\uFE77\uFE94\uFE7A";// \uFEDB\uFE79\uFE92\uFE7F\uFEAE\uFE76\uFE81\uFEED\uFE78\uFEEB\uFE79\uFEE2\uFE7E \uFEED\uFE76";// \uFEBF\uFE79\uFECC\uFE77\uFED4\uFE77\uFE82\uFEED\uFE78\uFEEB\uFE79\uFEE2\uFE7E";// The people of the city, the great and the small, came to me \u05D0\u05B5\u05DC\u05BC\u05B6\u05D4 \u05D4\u05B7\u05D3\u05BC\u05B0\u05D1\u05B8\u05E8\u05B4\u05D9\u05DD, \u05D0\u05B2\u05E9\u05C1\u05B6\u05E8 \u05D3\u05BC\u05B4\u05D1\u05BC\u05B6\u05E8 \u05DE\u05B9\u05E9\u05C1\u05B6\u05D4 \u05D0\u05B6\u05DC\u002D\u05DB\u05BC\u05B8\u05DC\u002D\u05D9\u05B4\u05E9\u05C2\u05B0\u05E8\u05B8\u05D0\u05B5\u05DC, \u05D1\u05BC\u05B0\u05E2\u05B5\u05D1\u05B6\u05E8, \u05D4\u05B7\u05D9\u05BC\u05B7\u05E8\u05B0\u05D3\u05BC\u05B5\u05DF";
-            int[] indexes;
-            int[] lengths;
+            List<int> indexes;
+            List<int> lengths;
             string res = NBidi.LogicalToVisual(orig, out indexes, out lengths);
             Assert.AreEqual("\uFEF0\uFE7B\uFEE7\uFE82\uFE77\uFE9F", res, "original: \"{0}\"\noriginal as chars: {1}\nresult as chars:   {2}", orig, AsCharArray(orig), AsCharArray(res));
         }
