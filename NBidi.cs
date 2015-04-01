@@ -147,6 +147,9 @@ namespace NBidi
 
             public Paragraph(string text)
             {
+                _char_lengths = new List<int>();
+                _bidi_indexes = new List<int>();
+
                 Text = text;
             }
 
@@ -205,8 +208,6 @@ namespace NBidi
                 string controlChars = "\u200F\u202B\u202E\u200E\u202A\u202D\u202C";
 
                 StringBuilder sb = new StringBuilder(_bidi_text);
-                List<int> idxArr = new List<int>(_bidi_indexes);
-                List<int> lenArr = new List<int>(_char_lengths);
 
                 int i = 0;
                 while (i < sb.Length)
@@ -214,16 +215,14 @@ namespace NBidi
                     if (controlChars.Contains(sb[i].ToString()))
                     {
                         sb.Remove(i, 1);
-                        idxArr.RemoveAt(i);
-                        lenArr.RemoveAt(i);
+                        _bidi_indexes.RemoveAt(i);
+                        _char_lengths.RemoveAt(i);
                     }
                     else
                         ++i;
                 }
 
                 _bidi_text = sb.ToString();
-                _bidi_indexes = idxArr;
-                _char_lengths = lenArr;
             }
 
             // 3.3.1 The Paragraph Level
@@ -247,12 +246,8 @@ namespace NBidi
 
             public void NormalizeText()
             {
-                List<int> char_lengths = new List<int>();
-
-                StringBuilder sb = InternalDecompose(char_lengths);
-                InternalCompose(sb, char_lengths);
-
-                _char_lengths = char_lengths;
+                StringBuilder sb = InternalDecompose(_char_lengths);
+                InternalCompose(sb, _char_lengths);
 
                 _text = sb.ToString();
             }
@@ -787,8 +782,6 @@ namespace NBidi
 
                 StringBuilder sb = new StringBuilder();
 
-                List<int> lenArr = new List<int>(_char_lengths);
-
                 for (int curr_pos = 0; curr_pos < text.Length; ++curr_pos)
                 {
                     char ch = text[curr_pos];
@@ -819,23 +812,23 @@ namespace NBidi
                             {
                                 case BidiChars.ARABIC_ALEF:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_FINAL;
-                                    lenArr.RemoveAt(insert_pos);
+                                    _char_lengths.RemoveAt(insert_pos);
                                     continue;
 
                                 case BidiChars.ARABIC_ALEF_MADDA_ABOVE:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_MADDA_ABOVE_FINAL;
-                                    lenArr.RemoveAt(insert_pos);
-                                    lenArr[insert_pos] = lenArr[insert_pos] + 1;
+                                    _char_lengths.RemoveAt(insert_pos);
+                                    _char_lengths[insert_pos] = _char_lengths[insert_pos] + 1;
                                     continue;
 
                                 case BidiChars.ARABIC_ALEF_HAMZA_ABOVE:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_HAMZA_ABOVE_FINAL;
-                                    lenArr.RemoveAt(insert_pos);
+                                    _char_lengths.RemoveAt(insert_pos);
                                     continue;
 
                                 case BidiChars.ARABIC_ALEF_HAMZA_BELOW:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_HAMZA_BELOW_FINAL;
-                                    lenArr.RemoveAt(insert_pos);
+                                    _char_lengths.RemoveAt(insert_pos);
                                     continue;
                             }
                         }
@@ -845,23 +838,23 @@ namespace NBidi
                             {
                                 case BidiChars.ARABIC_ALEF:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_ISOLATED;
-                                    lenArr.RemoveAt(insert_pos);
+                                    _char_lengths.RemoveAt(insert_pos);
                                     continue;
 
                                 case BidiChars.ARABIC_ALEF_MADDA_ABOVE:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_MADDA_ABOVE_ISOLATED;
-                                    lenArr.RemoveAt(insert_pos);
-                                    lenArr[insert_pos] = lenArr[insert_pos] + 1;
+                                    _char_lengths.RemoveAt(insert_pos);
+                                    _char_lengths[insert_pos] = _char_lengths[insert_pos] + 1;
                                     continue;
 
                                 case BidiChars.ARABIC_ALEF_HAMZA_ABOVE:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_HAMZA_ABOVE_ISOLATED;
-                                    lenArr.RemoveAt(insert_pos);
+                                    _char_lengths.RemoveAt(insert_pos);
                                     continue;
 
                                 case BidiChars.ARABIC_ALEF_HAMZA_BELOW:
                                     sb[insert_pos] = BidiChars.ARABIC_LAM_ALEF_HAMZA_BELOW_ISOLATED;
-                                    lenArr.RemoveAt(insert_pos);
+                                    _char_lengths.RemoveAt(insert_pos);
                                     continue;
                             }
                         }
@@ -869,8 +862,6 @@ namespace NBidi
 
                     sb.Append(UnicodeArabicShapingResolver.GetArabicCharacterByLetterForm(ch, letterForms[curr_pos]));
                 }
-
-                _char_lengths = lenArr;
 
                 return sb.ToString();
             }
